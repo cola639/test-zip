@@ -1,0 +1,25 @@
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - "v*"  # 只有推送 v1.0、v2.0 这样的 tag 时才会触发
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+
+      - name: 创建 ZIP 文件
+        run: zip index.zip index.js  # 只打包 index.js
+
+      - name: 发布 Release 并上传 ZIP
+        uses: softprops/action-gh-release@v2
+        with:
+          files: index.zip  # 上传到 GitHub Releases
+          body: "🚀 自动发布 index.js"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
